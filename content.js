@@ -1,36 +1,64 @@
-// Sélecteurs des éléments à masquer
-const ZENTUBE_SELECTORS = {
-    hideComments: "#comments",
-    hideSidebar: "ytd-watch-next-secondary-results-renderer",
-    hideShorts: "ytd-reel-shelf-renderer",
-    hideHomepage: "ytd-browse[page-subtype='home']"
-};
+// Applique les préférences dès qu'elles changent
+chrome.storage.sync.onChanged.addListener(applyPreferences);
 
-let settings = {};
+// Charge les préférences au démarrage
+chrome.storage.sync.get(null, prefs => {
+    applyPreferences(prefs);
+});
 
-// Applique le nettoyage selon les réglages
-function cleanYouTube() {
-    for (const [key, selector] of Object.entries(ZENTUBE_SELECTORS)) {
-        if (settings[key]) {
-            document.querySelectorAll(selector).forEach(el => el.remove());
-        }
+function applyPreferences(prefs) {
+    if (prefs.hideShorts || prefs.hideShorts?.newValue) {
+        enableHideShorts();
     }
 }
 
-// Récupère les préférences au démarrage
-chrome.storage.sync.get(Object.keys(ZENTUBE_SELECTORS), result => {
-    settings = result;
-    cleanYouTube();
-});
+// --- Masquage des Shorts dans la homepage, sidebar, recherche ---
 
-// Re-applique à chaque modification de DOM (YouTube recharge dynamiquement)
-const observer = new MutationObserver(cleanYouTube);
-observer.observe(document.body, { childList: true, subtree: true });
+function hideShortsElements() {
+    const selectors = [
+        "ytd-reel-shelf-renderer",
+        "ytd-rich-item-renderer a[href*='/shorts/']",
+        "a[href^='/shorts/']"
+    ];
 
-// Met à jour si l'utilisateur change un réglage
-chrome.storage.onChanged.addListener((changes) => {
-    for (const key in changes) {
-        settings[key] = changes[key].newValue;
-    }
-    cleanYouTube();
-});
+    selectors.forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => {
+            el.style.display = "none";
+        });
+    });
+}
+
+let shortsObserver = null;
+
+function enableHideShorts() {
+    // Exécute une première fois
+    hideShortsElements();
+
+    // Évite de créer plusieurs observers
+    if (shortsObserver) return;
+
+    shortsObserver = new MutationObserver(() => hideShortsElements());
+    shortsObserver.observe(document.body, { childList: true, subtree: true });
+}
+
+const hideShorts = () => {
+    // Tous les sélecteurs Shorts connus
+    const selectors = [
+        "ytd-reel-shelf-renderer",
+        "ytd-rich-shelf-renderer[is-shorts]",
+        "a[href*='/shorts']",
+        "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
+        "ytd-guide-entry-renderer a[href*='/shorts']",
+        "ytd-thumbnail-overlay-time-status-renderer[overlay-style='SHORTS']",
+    ];
+
+    selectors.forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => {
+            el.style.display = "none";
+            el.remove();
+        });
+    });
+};
+
+// Relancer en boucle car YouTube recharge du HTML toutes les 200 ms
+setInterval(hideShorts, 500);

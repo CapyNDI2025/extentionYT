@@ -14,3 +14,14 @@ options.forEach(opt => {
         chrome.storage.sync.set({ [opt]: value });
     });
 });
+
+// Chargement initial des préférences
+chrome.storage.sync.get(["hideShorts"], prefs => {
+    document.getElementById("hideShorts").checked = prefs.hideShorts ?? true;
+});
+
+// Sauvegarde en temps réel
+document.getElementById("hideShorts").addEventListener("change", (e) => {
+    chrome.storage.sync.set({ hideShorts: e.target.checked });
+});
+
