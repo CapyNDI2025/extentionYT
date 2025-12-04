@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "ZenTube",
+    "version": "1.0",
+    "description": "Nettoie YouTube : supprime recommandations, commentaires et distractions.",
+    "permissions": [],
+    "content_scripts": [
+      {
+        "matches": ["*://www.youtube.com/*"],
+        "js": ["content.js"],
+        "run_at": "document_idle"
+      }
+    ]
+}
