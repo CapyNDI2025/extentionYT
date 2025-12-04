@@ -1,14 +1,15 @@
 {
-    "manifest_version": 3,
-    "name": "ZenTube",
-    "version": "1.0",
-    "description": "Nettoie YouTube : supprime recommandations, commentaires et distractions.",
-    "permissions": [],
-    "content_scripts": [
-      {
-        "matches": ["*://www.youtube.com/*"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
-      }
-    ]
+  "manifest_version": 3,
+  "name": "ZenTube",
+  "version": "1.1",
+  "description": "Nettoie YouTube selon vos préférences : commentaires, recommandations, Shorts, etc.",
+  "permissions": ["storage"],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
