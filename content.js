@@ -1,3 +1,5 @@
+// content.js
+
 function cleanYouTube() {
     const selectors = [
         "#comments",                 // commentaires
