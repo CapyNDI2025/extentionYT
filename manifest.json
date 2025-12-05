@@ -27,12 +27,12 @@
     },
     {
       "matches": ["*://www.instagram.com/*"],
-      "js": ["instagram.js"],
+      "js": ["scripts/instagram.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["*://www.tiktok.com/*"],
-      "js": ["tiktok.js"],
+      "js": ["scripts/tiktok.js"],
       "run_at": "document_idle"
     }
   ],
