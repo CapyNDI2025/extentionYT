@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ZenTube",
-  "description": "Extension pour rendre YouTube plus calme : cacher Shorts, commentaires, suggestions…",
-  "version": "1.1",
+  "name": "ZenFocus",
+  "description": "Reprenez le contrôle de votre attention. Bloquez les distractions sur YouTube et Instagram pour rester concentré.",
+  "version": "2.0",
 
   "permissions": [
     "storage",
@@ -10,23 +10,24 @@
   ],
 
   "host_permissions": [
-    "*://www.youtube.com/*"
+    "*://www.youtube.com/*",
+    "*://www.instagram.com/*"
   ],
 
   "action": {
-    "default_title": "ZenTube",
-    "default_popup": "options.html"
+    "default_title": "Réglages ZenFocus",
+    "default_popup": "options/options.html"
   },
 
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/*"],
-      "js": ["content.js"],
+      "js": ["scripts/youtube.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["*://www.instagram.com/*"],
-      "js": ["instagram.js"],
+      "js": ["scripts/instagram.js"],
       "run_at": "document_idle"
     }
   ],
