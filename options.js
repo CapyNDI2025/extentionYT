@@ -30,6 +30,7 @@ chrome.storage.sync.get(options, (result) => {
     updateExploreState();
 });
 
+// Sauvegarder lorsqu'on coche/décoche
 options.forEach(opt => {
     const element = document.getElementById(opt);
 
@@ -42,3 +43,14 @@ options.forEach(opt => {
         }
     });
 });
+
+// Chargement initial des préférences
+chrome.storage.sync.get(["hideShorts"], prefs => {
+    document.getElementById("hideShorts").checked = prefs.hideShorts ?? true;
+});
+
+// Sauvegarde en temps réel
+document.getElementById("hideShorts").addEventListener("change", (e) => {
+    chrome.storage.sync.set({ hideShorts: e.target.checked });
+});
+

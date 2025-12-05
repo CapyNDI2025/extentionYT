@@ -1,20 +1,43 @@
 {
-    "manifest_version": 3,
-    "name": "ZenTube",
-    "version": "1.1",
-    "description": "Nettoie YouTube selon vos préférences : commentaires et distractions.",
-    "permissions": ["storage"],
-  "options_page": "options.html",
-    "content_scripts": [
+  "manifest_version": 3,
+  "name": "ZenTube",
+  "description": "Extension pour rendre YouTube plus calme : cacher Shorts, commentaires, suggestions…",
+  "version": "1.1",
+
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+
+  "host_permissions": [
+    "*://www.youtube.com/*"
+  ],
+
+  "action": {
+    "default_title": "ZenTube",
+    "default_popup": "options.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.instagram.com/*"],
+      "js": ["instagram.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
       {
-        "matches": ["*://www.youtube.com/*"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
-      },
-      {
-        "matches": ["*://www.instagram.com/*"],
-        "js": ["instagram.js"],
-        "run_at": "document_idle"
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
       }
     ]
+  }
 }
