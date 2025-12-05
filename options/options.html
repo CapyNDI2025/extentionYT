@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZenFocus - Paramètres</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            width: 350px; /* Taille fixe pour le popup */
+            color: #333;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .option {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        label {
+            cursor: pointer;
+            font-size: 14px;
+        }
+        /* Petit style pour la case désactivée */
+        input:disabled + label {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<h2>ZenFocus 🎯</h2>
+<p style="font-size: 13px; color: #666;">Configurez votre environnement numérique pour une concentration maximale.</p>
+
+<h3>YouTube (Mode Focus)</h3>
+<div class="option">
+    <input type="checkbox" id="hideHomepage">
+    <label for="hideHomepage">Masquer le flux d'accueil (Home)</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideShorts">
+    <label for="hideShorts">Bloquer les Shorts (Addictif)</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideSidebar">
+    <label for="hideSidebar">Masquer les recommandations à droite</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideComments">
+    <label for="hideComments">Masquer les commentaires</label>
+</div>
+
+<h3>Instagram (Mode Zen)</h3>
+<div class="option">
+    <input type="checkbox" id="hideInstaReels">
+    <label for="hideInstaReels">Bloquer les Reels</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideInstaExplore">
+    <label for="hideInstaExplore">Bloquer l'onglet Découvrir/Explore</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideInstaStories">
+    <label for="hideInstaStories">Masquer les Stories</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideInstaPosts">
+    <label for="hideInstaPosts">Masquer les images (Mode Texte seul)</label>
+</div>
+<div class="option">
+    <input type="checkbox" id="hideInstaNotifications">
+    <label for="hideInstaNotifications">Masquer les Notifications</label>
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>
