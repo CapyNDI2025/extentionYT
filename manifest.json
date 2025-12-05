@@ -28,6 +28,11 @@
       "matches": ["*://www.instagram.com/*"],
       "js": ["scripts/instagram.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.tiktok.com/*"],
+      "js": ["scripts/tiktok.js"],
+      "run_at": "document_idle"
     }
   ],
 

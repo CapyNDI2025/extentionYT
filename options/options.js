@@ -7,7 +7,13 @@ const toggles = [
     "hideInstaExplore",
     "hideInstaStories",
     "hideInstaPosts",
-    "hideInstaNotifications"
+    "hideInstaNotifications",
+    "hideTikTokForYou",
+    "hideTikTokExplore",
+    "hideTikTokFollowing",
+    "hideTikTokLive",
+    "hideTikTokActivity",
+    "hideTikTokFriends"
 ];
 
 const postsCheckbox = document.getElementById('hideInstaPosts');
