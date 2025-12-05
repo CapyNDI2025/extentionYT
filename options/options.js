@@ -1,8 +1,8 @@
-const options = [
-    "hideComments",
-    "hideSidebar",
-    "hideShorts",
+const toggles = [
     "hideHomepage",
+    "hideShorts",
+    "hideSidebar",
+    "hideComments",
     "hideInstaReels",
     "hideInstaExplore",
     "hideInstaStories",
@@ -14,43 +14,95 @@ const postsCheckbox = document.getElementById('hideInstaPosts');
 const exploreCheckbox = document.getElementById('hideInstaExplore');
 
 function updateExploreState() {
-    if (postsCheckbox.checked) {
+    if (postsCheckbox && postsCheckbox.checked) {
         exploreCheckbox.checked = true;
         exploreCheckbox.disabled = true;
         chrome.storage.sync.set({ 'hideInstaExplore': true });
-    } else {
+    } else if (exploreCheckbox) {
         exploreCheckbox.disabled = false;
     }
 }
 
-chrome.storage.sync.get(options, (result) => {
-    options.forEach(opt => {
-        document.getElementById(opt).checked = result[opt] || false;
-    });
-    updateExploreState();
-});
-
-// Sauvegarder lorsqu'on coche/décoche
-options.forEach(opt => {
-    const element = document.getElementById(opt);
-
-    element.addEventListener("change", (e) => {
-        const value = e.target.checked;
-        chrome.storage.sync.set({ [opt]: value });
-
-        if (opt === 'hideInstaPosts') {
-            updateExploreState();
+chrome.storage.sync.get(toggles, (result) => {
+    toggles.forEach(opt => {
+        const el = document.getElementById(opt);
+        if (el) {
+            el.checked = result[opt] || false;
+            el.addEventListener("change", (e) => {
+                const value = e.target.checked;
+                chrome.storage.sync.set({ [opt]: value });
+                if (opt === 'hideInstaPosts') updateExploreState();
+            });
         }
     });
+    if (postsCheckbox) updateExploreState();
 });
 
-// Chargement initial des préférences
-chrome.storage.sync.get(["hideShorts"], prefs => {
-    document.getElementById("hideShorts").checked = prefs.hideShorts ?? true;
+
+
+const textArea = document.getElementById("blockedSites");
+const saveBtn = document.getElementById("saveBlocklist");
+const statusMsg = document.getElementById("saveStatus");
+
+chrome.storage.sync.get(["blockedSitesList"], (result) => {
+    if (result.blockedSitesList) {
+        textArea.value = result.blockedSitesList;
+    }
 });
 
-// Sauvegarde en temps réel
-document.getElementById("hideShorts").addEventListener("change", (e) => {
-    chrome.storage.sync.set({ hideShorts: e.target.checked });
+// Sauvegarder
+saveBtn.addEventListener("click", () => {
+    const rawInput = textArea.value;
+
+    // Nettoyage robuste
+    const domains = rawInput
+        .split(/[\n,]+/)
+        .map(d => d.trim())
+        .filter(d => d.length > 0)
+        .map(d => {
+            let clean = d.toLowerCase();
+
+            clean = clean.replace(/^(https?:\/\/)?(www\.)?/, "");
+
+            clean = clean.split('/')[0];
+
+            return clean;
+        })
+        .filter(d => d.includes(".") && d.length > 3);
+
+    chrome.storage.sync.set({ blockedSitesList: rawInput });
+
+    updateDynamicRules(domains);
+    showSaveStatus();
 });
 
+function updateDynamicRules(domains) {
+    chrome.declarativeNetRequest.getDynamicRules(oldRules => {
+        const oldRuleIds = oldRules.map(rule => rule.id);
+
+        const newRules = domains.map((domain, index) => ({
+            "id": 1000 + index,
+            "priority": 1,
+            "action": { "type": "block" },
+            "condition": {
+                "urlFilter": domain,
+                "isUrlFilterCaseSensitive": false,
+                "resourceTypes": ["main_frame"]
+            }
+        }));
+
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: oldRuleIds,
+            addRules: newRules
+        });
+    });
+}
+
+function showSaveStatus() {
+    if(statusMsg) {
+        statusMsg.style.opacity = "1";
+        setTimeout(() => {
+            statusMsg.style.opacity = "0";
+        }, 2000);
+    }
+}

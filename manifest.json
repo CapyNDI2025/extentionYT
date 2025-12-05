@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ZenFocus",
   "description": "Reprenez le contrôle de votre attention. Bloquez les distractions sur YouTube et Instagram pour rester concentré.",
-  "version": "2.0",
+  "version": "2.1",
 
   "permissions": [
     "storage",
@@ -10,8 +10,7 @@
   ],
 
   "host_permissions": [
-    "*://www.youtube.com/*",
-    "*://www.instagram.com/*"
+    "<all_urls>"
   ],
 
   "action": {
