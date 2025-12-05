@@ -1,64 +1,88 @@
-// Applique les préférences dès qu'elles changent
-chrome.storage.sync.onChanged.addListener(applyPreferences);
+let ytSettings = {};
 
-// Charge les préférences au démarrage
-chrome.storage.sync.get(null, prefs => {
-    applyPreferences(prefs);
-});
+function cleanYouTube() {
+    if (ytSettings.hideHomepage) {
+        const homeSelectors = [
+            "ytd-browse[page-subtype='home']",
+            "#page-manager > ytd-browse[page-subtype='home']"
+        ];
+        homeSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.style.display = "none");
+        });
+    }
 
-function applyPreferences(prefs) {
-    if (prefs.hideShorts || prefs.hideShorts?.newValue) {
-        enableHideShorts();
+    // --- GESTION DES SHORTS ---
+    if (ytSettings.hideShorts) {
+        const shortsSelectors = [
+            // Menu latéral
+            "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
+            "ytd-guide-entry-renderer:has(a[title='Shorts'])",
+            "a[title='Shorts']",
+
+            // Rayons sur la page d'accueil / résultats
+            "ytd-reel-shelf-renderer",
+            "ytd-rich-shelf-renderer[is-shorts]",
+
+            // Onglet Shorts dans les chaînes
+            "yt-tab-shape[tab-title='Shorts']",
+
+            // Liens vidéos
+            "a[href^='/shorts/']"
+        ];
+
+        shortsSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.style.display = "none");
+        });
+    }
+
+    // --- GESTION DE LA BARRE LATÉRALE (Suggestions) ---
+    if (ytSettings.hideSidebar) {
+        const sidebarSelectors = [
+            "#secondary", // La colonne de droite entière
+            "ytd-watch-next-secondary-results-renderer" // Les vidéos suggérées spécifiquement
+        ];
+        sidebarSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.style.display = "none");
+        });
+    }
+
+    // --- GESTION DES COMMENTAIRES ---
+    if (ytSettings.hideComments) {
+        const commentSelectors = [
+            "#comments",
+            "ytd-comments"
+        ];
+        commentSelectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.style.display = "none");
+        });
     }
 }
 
-// --- Masquage des Shorts dans la homepage, sidebar, recherche ---
+// --- INITIALISATION ---
 
-function hideShortsElements() {
-    const selectors = [
-        "ytd-reel-shelf-renderer",
-        "ytd-rich-item-renderer a[href*='/shorts/']",
-        "a[href^='/shorts/']"
-    ];
+const keys = [
+    "hideHomepage",
+    "hideShorts",
+    "hideSidebar",
+    "hideComments"
+];
 
-    selectors.forEach(sel => {
-        document.querySelectorAll(sel).forEach(el => {
-            el.style.display = "none";
-        });
-    });
-}
+// Récupérer les options au chargement
+chrome.storage.sync.get(keys, (result) => {
+    ytSettings = result;
 
-let shortsObserver = null;
+    cleanYouTube();
 
-function enableHideShorts() {
-    // Exécute une première fois
-    hideShortsElements();
+    const ytObserver = new MutationObserver(cleanYouTube);
+    ytObserver.observe(document.body, { childList: true, subtree: true });
+});
 
-    // Évite de créer plusieurs observers
-    if (shortsObserver) return;
-
-    shortsObserver = new MutationObserver(() => hideShortsElements());
-    shortsObserver.observe(document.body, { childList: true, subtree: true });
-}
-
-const hideShorts = () => {
-    // Tous les sélecteurs Shorts connus
-    const selectors = [
-        "ytd-reel-shelf-renderer",
-        "ytd-rich-shelf-renderer[is-shorts]",
-        "a[href*='/shorts']",
-        "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
-        "ytd-guide-entry-renderer a[href*='/shorts']",
-        "ytd-thumbnail-overlay-time-status-renderer[overlay-style='SHORTS']",
-    ];
-
-    selectors.forEach(sel => {
-        document.querySelectorAll(sel).forEach(el => {
-            el.style.display = "none";
-            el.remove();
-        });
-    });
-};
-
-// Relancer en boucle car YouTube recharge du HTML toutes les 200 ms
-setInterval(hideShorts, 500);
+// Écouter les changements de paramètres en direct
+chrome.storage.onChanged.addListener((changes) => {
+    for (const key in changes) {
+        if (keys.includes(key)) {
+            ytSettings[key] = changes[key].newValue;
+        }
+    }
+    cleanYouTube();
+});
