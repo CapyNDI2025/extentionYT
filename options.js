@@ -1,16 +1,44 @@
-const options = ["hideComments", "hideSidebar", "hideShorts", "hideHomepage"];
+const options = [
+    "hideComments",
+    "hideSidebar",
+    "hideShorts",
+    "hideHomepage",
+    "hideInstaReels",
+    "hideInstaExplore",
+    "hideInstaStories",
+    "hideInstaPosts",
+    "hideInstaNotifications"
+];
 
-// Charger les réglages
+const postsCheckbox = document.getElementById('hideInstaPosts');
+const exploreCheckbox = document.getElementById('hideInstaExplore');
+
+function updateExploreState() {
+    if (postsCheckbox.checked) {
+        exploreCheckbox.checked = true;
+        exploreCheckbox.disabled = true;
+        chrome.storage.sync.set({ 'hideInstaExplore': true });
+    } else {
+        exploreCheckbox.disabled = false;
+    }
+}
+
 chrome.storage.sync.get(options, (result) => {
     options.forEach(opt => {
         document.getElementById(opt).checked = result[opt] || false;
     });
+    updateExploreState();
 });
 
-// Sauvegarder lorsqu'on coche/décoche
 options.forEach(opt => {
-    document.getElementById(opt).addEventListener("change", (e) => {
+    const element = document.getElementById(opt);
+
+    element.addEventListener("change", (e) => {
         const value = e.target.checked;
         chrome.storage.sync.set({ [opt]: value });
+
+        if (opt === 'hideInstaPosts') {
+            updateExploreState();
+        }
     });
 });
