@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ZenSocial",
-  "description": "Extension pour rendre YouTube, Instagram et TikTok plus calmes : cacher contenus indésirables…",
-  "version": "1.1",
+  "name": "ZenFocus",
+  "description": "Reprenez le contrôle de votre attention. Bloquez les distractions sur YouTube et Instagram pour rester concentré.",
+  "version": "2.1",
 
   "permissions": [
     "storage",
@@ -10,8 +10,7 @@
   ],
 
   "host_permissions": [
-    "*://www.youtube.com/*",
-    "*://www.tiktok.com/*"
+    "<all_urls>"
   ],
 
   "action": {

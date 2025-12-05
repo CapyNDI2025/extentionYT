@@ -79,14 +79,14 @@
     <div class="option">
     <label for="hideTikTokExplore">Bloquer "Explorer/Découvrir"</label>
 
-    <input type="checkbox" id="hideTikTokExplore">    
+    <input type="checkbox" id="hideTikTokExplore">
 </div>
 
     <div class="option">
         <label for="hideTikTokFollowing">Bloquer "Suivi/Abonnements"</label>
-        
+
     <input type="checkbox" id="hideTikTokFollowing">
-    
+
     </div>
 
     <div class="option">
@@ -101,11 +101,23 @@
 
     <div class="option">
     <label for="hideTikTokFriends">Bloquer "Friends" (Amis)</label>
-    <input type="checkbox" id="hideTikTokFriends">  
+    <input type="checkbox" id="hideTikTokFriends">
 </div>
 </div>
 
 
+
+<div class="card">
+    <h3>Ban List (Sites interdits)</h3>
+    <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+        Ajoutez les domaines à bloquer (un par ligne ou séparés par des virgules).
+    </p>
+
+    <textarea id="blockedSites" rows="5" placeholder="facebook.com, twitter.com, tiktok.com..."></textarea>
+
+    <button id="saveBlocklist" class="btn-save">Sauvegarder la liste</button>
+    <span id="saveStatus" style="font-size: 12px; margin-left: 10px; color: #28a745; opacity: 0; transition: opacity 0.3s;">Sauvegardé !</span>
+</div>
 
 <div class="footer">
     ZenFocus
