@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "ZenTube",
-  "description": "Extension pour rendre YouTube plus calme : cacher Shorts, commentaires, suggestions…",
+  "name": "ZenSocial",
+  "description": "Extension pour rendre YouTube, Instagram et TikTok plus calmes : cacher contenus indésirables…",
   "version": "1.1",
 
   "permissions": [
@@ -10,7 +10,8 @@
   ],
 
   "host_permissions": [
-    "*://www.youtube.com/*"
+    "*://www.youtube.com/*",
+    "*://www.tiktok.com/*"
   ],
 
   "action": {
@@ -27,6 +28,11 @@
     {
       "matches": ["*://www.instagram.com/*"],
       "js": ["instagram.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.tiktok.com/*"],
+      "js": ["tiktok.js"],
       "run_at": "document_idle"
     }
   ],
