@@ -1,14 +1,48 @@
 {
-    "manifest_version": 3,
-    "name": "ZenTube",
-    "version": "1.0",
-    "description": "Nettoie YouTube : supprime recommandations, commentaires et distractions.",
-    "permissions": [],
-    "content_scripts": [
+  "manifest_version": 3,
+  "name": "ZenFocus",
+  "description": "Reprenez le contrôle de votre attention. Bloquez les distractions sur YouTube et Instagram pour rester concentré.",
+  "version": "2.1",
+
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "action": {
+    "default_title": "Réglages ZenFocus",
+    "default_popup": "options/options.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["scripts/youtube.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.instagram.com/*"],
+      "js": ["scripts/instagram.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://www.tiktok.com/*"],
+      "js": ["scripts/tiktok.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
       {
-        "matches": ["*://www.youtube.com/*"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
       }
     ]
+  }
 }
